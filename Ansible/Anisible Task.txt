@@ -1,0 +1,110 @@
+---
+  - name: Search String with lineinfile
+    hosts: localhost                         
+    connection: local                        
+    gather_facts: False                      
+    tags: provisioning                       
+    vars:
+     ansible_python_interpreter: /usr/bin/python3  
+    tasks:
+      - name: "Searching for a String"         
+        become: yes                            
+        become_user: root
+        tags: example1
+        lineinfile:                            
+          path: /test_root/text.txt
+          line: "hio"
+          state: present
+          backup: yes
+        register: example2out
+      - name: "replcing"
+        become: yes
+        become_user: root
+        tags: example1
+        lineinfile:                            
+          path: /test_root/text.txt
+          # The String to Search
+          regexp: "testone"
+          # The String to Replace
+          line: "hi nitin babar dev"
+          state: present
+          backup: yes
+
+        register: example1out 
+      - name: "downloading json data"
+        become: yes
+        become_user: root
+        tags: example1
+        get_url:                                             
+          url: https://jsonplaceholder.typicode.com/users
+          dest: /etc/data.conf
+          mode: '0440'
+      - name: Download JSON content play
+        uri:
+          url: https://jsonplaceholder.typicode.com/users
+          return_content: yes
+        register: jsoncontent                               
+
+
+      - name: Just the Names
+        debug: msg="{{ jsoncontent.json | json_query(jmesquery)}}"
+        vars:
+          jmesquery: "[*].name"
+
+      - name: Download JSON content play
+        uri:
+          url: https://jsonplaceholder.typicode.com/users
+          return_content: yes
+        register: jsoncontent                                 
+
+
+      - name: Just the Names
+        debug: msg="{{ jsoncontent.json | json_query(jmesquery)}}"
+        vars:
+          jmesquery: "[? name==`Leanne Graham`].{Name: name, Email: email, Phone: phone, CompanyName: company.name, WebSite: website, City: address.city}"
+ 
+      - name: update                                       
+        apt: update_cache=yes
+      - name: Install Nginx
+        apt: name=nginx state=latest
+
+
+        notify:
+          - restart nginx
+
+    handlers:                                               
+      - name: restart nginx
+        service: name=nginx state=reloaded
+
+      - name: copy files
+        ansible.builtin.copy:
+          src: /etc/file.txt
+          dest: /copy-files
+          owner: root
+          group: root
+          mode: '0644'
+
+      - name: find files older than 30 days
+        find:
+          paths: /tmp
+          age: 30d
+          age_stamp: mtime
+          recurse: yes
+        register: output                                     
+
+
+      - debug: var=item.path
+        with_items: "{{output.files}}"
+
+
+
+
+
+
+
+
+
+
+
+
+

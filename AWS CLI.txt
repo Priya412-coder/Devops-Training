@@ -1,0 +1,88 @@
+: AWS CLI :
+
+to create VPC :
+
+aws ec2 create-vpc --cidr-block 100.150.0.0/16
+
+to delete VPC :
+aws ec2 delete-vpc --vpc-id vpc-a01106c2
+to give name to VPC :
+
+aws ec2 create-tags --resources i-0c865851727bd2027 --tags Key=Name,Value=CLI_Frontend
+
+to create subnet:
+
+aws ec2 create-subnet --vpc-id vpc-044c2f587f7b0d13b --cidr-block 100.150.0.0/16
+
+to delete subnet:
+
+aws ec2 delete-subnet --subnet-id subnet-056b37b00a6312065
+
+to create internet gateway:
+
+aws ec2 create-internet-gateway
+
+to delete internet gateway:
+aws ec2 delete-internet-gateway \
+    --internet-gateway-id igw-0d0fb496b3EXAMPLE
+
+to attach internet gateway:
+
+aws ec2 attach-internet-gateway --internet-gateway-id igw-03cd8fd543880869c --vpc-id vpc-044c2f587f7b0d13b
+
+to create elastice IP:
+
+aws ec2 allocate-address --domain vpc
+
+to create NAT Gateway:
+
+aws ec2 create-nat-gateway --subnet-id subnet-0aa67de7f7f2c470e --allocation-id eipalloc-06fbd75806c636515
+
+to create route table:
+
+aws ec2 create-route-table --vpc-id vpc-044c2f587f7b0d13b
+
+to associate ig to route table:
+
+aws ec2 create-route --route-table-id rtb-0763325c9a13bac49 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-03cd8fd543880869c
+
+to associate subnet with route table:
+
+aws ec2 associate-route-table --route-table-id rtb-0763325c9a13bac49 --subnet-id subnet-0aa67de7f7f2c470e
+
+to create security group :
+
+aws ec2 create-security-group --group-name MySecPrivGrp --description "my security grp" --vpc-id vpc-044c2f587f7b0d13b
+
+aws ec2 authorize-security-group-ingress --group-id sg-03b340049f46b4bbf --protocol tcp  --port 22 --cidr 0.0.0.0/0
+
+
+to create keypair:
+
+aws ec2 create-key-pair --key-name MyCLIKey --query "my_second_keypair" --output text > MyCLI.pem
+
+to delete keypair:
+
+aws ec2 delete-key-pair --key-name MY
+
+to create instance:
+
+aws ec2 run-instances --image-id ami-04505e74c0741db8d --count 1 --instance-type t2.micro --key-name cliKeyPair --security-group-ids sg-03b340049f46b4bbf --subnet-id subnet-009737551df19a8c2 --associate-private-ip-address
+
+to terminate instance:
+
+aws ec2 terminate-instances --instance-ids i-006ec268fc0e6dd79
+
+to stop instance:
+
+aws ec2 stop-instances --instance-ids i-006ec268fc0e6dd79
+
+to start instance:
+
+aws ec2 start-instances --instance-ids i-006ec268fc0e6dd79
+
+to list instance:
+
+aws ec2 describe-instances –filters “Name=tag:Name,Values=EC2”
+
+

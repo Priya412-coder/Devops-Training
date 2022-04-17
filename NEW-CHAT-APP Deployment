@@ -1,0 +1,129 @@
+
+1.first create your virtual network
+2.create subnet for log in.
+a.public--for frontend
+b.private--for backend
+
+3.create database using resource group,and passing firwall sec as all ip.
+(make sure that tick it is publically accessible
+
+4.launch vm-fr0ntend..ip should be public..and select public subnet
+
+5.launch vm-backend..disable public ip..select in private subnet
+
+
+---------------------------------------------------------------------------------------------------
+backend
+------------------
+1.connect to frontend and via pagent connect to backend.
+2.follow following steps:
+
+sudo apt-get update
+sudo apt-get install python3-pip python3-dev -y
+sudo apt-get update
+sudo pip3 install virtualenv
+git clone https://github.com/kadamsagar039/new_chatapp
+ls
+cd new_chatapp/
+virtualenv -p /usr/bin/python3 venv
+source venv/bin/activate
+vi requirements.txt
+pip3 install -r requirements.txt
+pip3 install gunicorn
+cd fundoo/fundoo
+nano settings.py ---------------update database credential
+   15  cd ..
+   16  ls
+   17  python manage.py makemigrations
+   18  python3 manage.py collectstatic
+   26  sudo apt-get install python3-dev default-libmysqlclient-dev build-essential
+   38  pip install mysqlclient
+   30  python manage.py migrate
+   31  ls
+   32  python manage.py collectstatic
+   40  python manage.py makemigrations
+   41  python manage.py migrate
+   42  python3 manage.py runserver 0.0.0.0:8000
+   43  gunicorn --bind 0.0.0.0:8000 fundoo.wsgi:application
+   44  sudo nano /etc/systemd/system/gunicorn.service
+       [Unit]
+      Description=gunicorn daemon
+      After=network.target
+      [Service]
+      User=ubuntu
+      Group=www-data
+      WorkingDirectory=/home/ubuntu/new_chatapp/fundoo
+      ExecStart=/home/ubuntu/new_chatapp/venv/bin/gunicorn --workers 3 --bind 0.0.0.0:8000 fundoo.wsgi:application
+     [Install]
+     WantedBy=multi-user.target
+
+   46  sudo systemctl daemon-reload
+   47  sudo systemctl start gunicorn
+   48  sudo systemctl enable gunicorn
+   49  sudo systemctl status gunicorn
+   50  sudo nano /home/ubuntu/new_chatapp/fundoo/fundooapp/views.py
+   54  pip3 freeze | grep -i jwt
+   53  pip3 uninstall jwt
+   55  sudo systemctl stop gunicorn
+   56*
+   57  sudo systemctl status gunicorn
+   58  sudo systemctl daemon-reload
+   59  sudo systemctl status gunicorn
+   60  pip3 uninstall PyJWT
+   61  pip3 install PyJWT
+   64  pip3 install PyJWT==1.7.1
+   65  sudo systemctl stop gunicorn
+   66  sudo systemctl start gunicorn
+   67  sudo systemctl status gunicorn
+   68  history
+
+----------------------------------------------
+after that go to frontend
+
+sudo apt-get install nginx
+
+sudo vim /etc/nginx/sites-available/fundoo
+
+server {
+        listen 80;
+        server_name _default;
+        #location = /favicon.ico { access_log off; log_not_found off; }
+        location /static/ {
+                root /home/ubuntu/new_chatapp/fundoo;
+        }
+        location / {
+               include proxy_params;
+               proxy_pass http://10.0.1.30:8000;
+        }
+}
+
+sudo ln -s /etc/nginx/sites-available/fundoo /etc/nginx/sites-enabled
+sudo nginx -t
+sudo rm /etc/nginx/sites-enabled/default
+sudo systemctl restart nginx
+sudo systemctl status nginx
+
+#for checking the application is working or not by below command
+curl http://localhost
+
+# Check nginx error 
+sudo tail -f /var/log/nginx/error.log
+------------------------------------------------------------------------------------------
+
+#Use below commands to update and check the python configuration
+	# Edit, save and exit the file
+sudo vim /home/ubuntu/new_chatapp/fundoo/fundoo/settings.py
+#####For checking status####	
+sudo systemctl restart gunicorn
+sudo systemctl status gunicorn
+sudo systemctl nginx restart
+service status nginx
+systemctl status nginx
+
+-----------------------------------------------------------------------------
+
+mysql -h endpoint -u username -p
+
+netstat -tulpen = to check which port its listening
+
+

@@ -1,0 +1,6 @@
+Use VS Code to run terraform
+terraform init
+aws configure - credential of AWS Account
+terraform plan
+terraform apply
+terraform destory

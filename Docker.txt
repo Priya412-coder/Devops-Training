@@ -1,0 +1,96 @@
+				||DOCKER||
+
+Docker Installation:
+•	$ sudo apt-get update -y
+•	$ sudo apt-get upgrade -y
+•	$  sudo apt-get remove docker docker-engine docker.io containerd runc
+•	$  sudo apt install docker.io
+•	$  sudo systemctl start docker
+•	$  sudo systemctl status docker
+•	$  sudo systemctl enable docker
+•	$  sudo systemctl status docker
+•	$  docker –version
+-------------------------------------------------------------------------
+
+Creating Docker File & Docker Image
+•	cd database/
+•	touch Dockerfile
+•	sudo vi Dockerfile
+FROM mysql:latest
+ENV MYSQL_DATABASE my_DB
+ENV MYSQL_ROOT_PASSWORD priyanka
+ENV MYSQL_USER priya
+ENV MYSQL_PASSWORD priyanka
+EXPOSE 3306
+•	sudo docker build -t database:database .
+
+------------------------------------------------------------------------------------------------------
+
+•	cd backend/
+•	git clone https://github.com/Priya412-coder/new_chatapp-1.git
+•	sudo vi Dockerfile  
+FROM python:3.6
+RUN apt-get update
+RUN apt-get install --yes python3-pip
+RUN mkdir /new_chatapp
+COPY /new_chatapp-1  /new_chatapp
+WORKDIR /new_chatapp
+RUN pip3 install -r requirements.txt
+RUN pip3 install mysqlclient
+EXPOSE 8000
+WORKDIR /new_chatapp/fundoo/
+ENTRYPOINT  python manage.py migrate && python3 manage.py runserver 0.0.0.0:8000
+
+•	sudo docker build -t backend:backend .
+
+----------------------------------------------------------------------------------------------------------------------
+
+•	cd frontend/
+•	Sudo vi Dockerfile
+FROM ubuntu
+RUN apt-get update
+RUN apt-get install -y nginx
+COPY nginx.conf /etc/nginx/sites-available/fundoo
+RUN ln -s /etc/nginx/sites-available/fundoo /etc/nginx/sites-enabled
+RUN rm -rf /etc/nginx/sites-enabled/default
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+
+•	sudo vi nginx.conf
+server {
+listen 80;
+server_name _default;
+#location = /favicon.ico { access_log off; log_not_found off; }
+location /static/ {
+root /new_chatapp/fundoo;
+}
+location / {
+include proxy_params;
+proxy_pass http://backend_server:8000;
+}
+}
+
+
+•	sudo docker build -t frontend:frontend_server .
+
+---------------------------------------------------------------------------------------------------------------------------
+
+Creating Docker Container:
+•	Sudo docker run -it --name database -d e202dd6ddb11
+•	sudo docker run -it --name backend --link database -d 25bce2b03ea6   
+•	sudo docker run -it --name frontend -p 80:80 --link backend -d backend
+•	sudo docker ps
+•	to get inside container
+•	sudo docker exec -it containerName/contaierID /bin/bash
+
+ --------------------------------------------------------------------------------------------------------------------------
+
+ other commands:
+•	to delete image
+•	sudo docker rmi -f imageID/imageName
+•	to delete container
+•	sudo docker rm -f containerID/contaierName
+•	to check the IP Port of container
+•	sudo docker exec -it  containerID/containerName  cat /etc/hosts
+
+  

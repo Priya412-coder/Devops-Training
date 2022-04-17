@@ -1,0 +1,80 @@
+                   		ANISIBLE
+Step 1:
+We’ll be creating one Anisible Server and 2 host. By creating instance.
+
+To install anisible on ubuntu : 
+$ sudo apt update 
+$ sudo apt upgrade
+$ sudo apt install software-properties-common 
+$ sudo add-apt-repository --yes --update ppa:ansible/ansible 
+$ sudo apt install ansible
+Step 3:
+To check if its install : 
+$ cd /etc/ansible
+$ ansible  --version
+$ ls -la
+Step 4:
+To add host IP in Anisible Master: (Host Updation )
+$ nano /etc/ansible/hosts
+    Add IP address by grouping , if u have more than 1 host/instance
+Ex: [group name]
+      10.0.2.3
+      10.0.200.36
+Step 5: 
+Configuration on anisible 
+$ nano /etc/ansible/ansible.cfg
+       Allow : inventory      = /etc/ansible/hosts
+                   sudo_user      = root 
+             by removing # infront.
+
+Step 6: 
+Create password for recent user that is UBUNTU ( repecte the same on backend and frontend server)
+$ sudo passwd root
+also give permission to user
+$sudo visudo
+$ User privilege specification
+root    ALL=(ALL:ALL) ALL
+ubuntu ALL=(ALL:ALL) NOPASSWD: ALL (this need to be updated with the username)
+Step 7: 
+To give permission to SSH ( this needs to be done on ansible server, backend server and frontend server)
+$ nano /etc/ssh/sshd_config
+
+# Authentication:
+
+#LoginGraceTime 2m
+#PermitRootLogin prohibit-password --- > Remove #
+#StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication no --- PasswordAuthentication yes
+#PermitEmptyPasswords no
+
+Restart SSH ( this needs to be done on ansible server, backend server and frontend server)
+$ service sshd restart
+$ service sshd status
+For passwordless login
+$ ssh-keygen
+$ ls -a
+$ cd .ssh/
+$ ls 
+$ ssh-copy-id ansible@ privateIP
+Step 8: 
+Create playbook
+$ sudo vi backend.yml
+$ sudo vi frontend.yml
+$ ansible-playbook backend.yml
+$ ansible-playbook frontend.yml
+
+
+
+
+
+
+
+ 
+
+
+
+

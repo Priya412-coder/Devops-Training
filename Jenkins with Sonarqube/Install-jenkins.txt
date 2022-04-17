@@ -1,0 +1,15 @@
+  210  sudo apt-get update -y
+  211  sudo apt-get upgrade -y
+  212  sudo apt-cache search openjdk
+  213  sudo apt-get install openjdk-8-jdk
+  216  java -version
+  219  wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | apt-key add -
+
+  220  sudo vi /etc/apt/sources.list --> deb https://pkg.jenkins.io/debian-stable binary/
+
+  221  sudo apt-get update -y
+  222  sudo apt-cache search jenkins
+  223  apt-cache madison jenkins
+  224  sudo apt-get install jenkins -y
+  225  sudo service jenkins status
+  226  cat /var/lib/jenkins/secrets/initialAdminPassword

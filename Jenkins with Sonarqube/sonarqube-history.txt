@@ -1,0 +1,61 @@
+ apt-get update
+    3  apt  list | grep openjdk-11
+    4  sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+    5  wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    6  sudo apt-get update
+    7  sudo apt-get -y install postgresql
+    8  systemctl status postgresql
+    9  cd /etc/
+   10  ls
+   11  cat passwd
+   12  cd ..
+   13  passwd postgres
+   14  su - postgres
+   15  systemctl restart postgresql
+   16  systemctl status postgresql
+   17  netstat -tulpn
+   18  cd ~
+   19  netstat -tulpn
+   20  vi /etc/sysctl.conf
+   21  vi /etc/security/limits.conf
+   22  init 6
+   23  cd ~
+   24  init 6
+   25  cd ~
+   26  ls
+   27  cd /home/ubuntu/
+   28  ls
+   29  ls -a
+   30  cd ~
+   31  cd /opt/
+   32  ll
+   33  wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.2.46101.zip
+   34  unzip sonarqube-8.9.2.46101.zip
+   35  apt install unzip
+   36  unzip sonarqube-8.9.2.46101.zip
+   37  ll
+   38  cd sonarqube-8.9.2.46101
+   39  ls
+   40  cd conf/
+   41  ls
+   42  vi sonar.properties
+   43  ll
+   44  cd  /etc/systemd/system/
+   45  ls
+   46  nano sonarqube.service
+   47  cat  sonarqube.service
+   48  nano sonarqube.service
+   49  cd ..
+   50  cd /opt/sonarqube-8.9.2.46101
+   51  ll
+   52  cd bin
+   53  cd ..
+   54  mv sonarqube-8.9.2.46101/ sonarqube
+   55  useradd -d /opt/sonarqube sonar
+   56  chown -R sonar:sonar
+   57  chown -R sonar:sonar /opt/sonarqube
+   58  ls -l /opt/sonarqube
+   59  systemctl daemon-reload
+   60  systemctl start sonarqube.service
+   61  ps -ef |grep sonar
+   62  netstat -tulpn

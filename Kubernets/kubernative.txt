@@ -1,0 +1,57 @@
+1) #first launch a instance on aws and access server on 
+	t2medium
+2)#Create a IAM user role in aws with administration access
+3) Install aws cli 
+	sudo apt-get update
+	sudo apt-get install awscli -y
+	aws --version
+4)do aws configure
+	add user user credential assess key and secreate key 
+
+move to sudo su (root)
+
+5)
+ #install eksctl and kubectl for creating cluster and pods
+   #link for installing : https://www.hackerxone.com/2021/08/20/steps-to-install-kubectl-eksctl-on-ubuntu-20-04/
+   https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+   #installing kubectl:
+   apt-get update
+   curl -o kubectl https://amazon-eks.s3-us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+   chmod +x ./kubectl
+   mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
+   kubectl version --short --client
+
+
+
+
+6)
+ #installing eksctl
+     apt-get update
+     curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+     mv /tmp/eksctl /usr/local/bin
+     eksctl version 
+	 
+7)
+#Create cluster 
+sudo eksctl create cluster \
+ --name Kubernetes-cluster \
+ --region us-east-1 \
+ --zones us-east-1a,us-east-1b,us-east-1c \
+ --version 1.21\
+ --managed \
+ --nodegroup-name workergroup \
+ --node-type t3.small \
+ --nodes-min 1 \
+ --nodes-max 4 \
+ --node-volume-size 20 \
+ --ssh-access \
+ --ssh-public-key aws-keypair \
+ --asg-access \
+ --external-dns-access \
+ --full-ecr-access \
+ --kubeconfig /home/ubuntu/.kube/config
+ 
+8)	sudo snap install kubectl --classic
+	kubectl get nodes ---- > do aws configure before to that
+	aws eks list-clusters
+	kubectl get svc

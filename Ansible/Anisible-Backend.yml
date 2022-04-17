@@ -1,0 +1,71 @@
+--- #(playbook for deploy django chat app)
+ - name: config  backend  servers
+   hosts: backend
+   remote_user: ubuntu
+   become: yes
+   gather_facts: yes
+   tasks:
+    - name: install package for chat app
+      action: apt name=python3-pip  state=present
+    - name: Install virtualenv  python package
+      pip:
+       name: virtualenv
+    - name: Clone a github repository
+      git:
+       repo: https://github.com/kales5078/new_chatapp.git
+       dest: new_chatapp
+       clone: yes
+    - name: Install specified python requirements in indicated (virtualenv)
+      pip:
+       requirements: /home/ubuntu/new_chatapp/requirements.txt
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: install package for chat app
+      action: apt name=default-libmysqlclient-dev state=present
+    - name: install package for chat app
+      action: apt name=libssl-dev state=present
+    - name: install mysqlclient
+      pip:
+       name: mysqlclient
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: install package for chat app
+      action: apt name=python3-psycopg2 state=present
+    - name: install psycopg2-binary
+      pip:
+       name: psycopg2-binary
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: Run chachetable  on the application
+      django_manage:
+       command: createcachetable
+       app_path: /home/ubuntu/new_chatapp/fundoo
+       pythonpath: /home/ubuntu/new_chatapp/fundoo/fundoo
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: Run migrate-command
+      django_manage:
+       command: migrate
+       app_path: /home/ubuntu/new_chatapp/fundoo
+       pythonpath: /home/ubuntu/new_chatapp/fundoo/fundoo
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: Copying gunicorn configurations to chatapp
+      copy:
+       src: /home/ubuntu/config/gunicorn.service
+       dest: /etc/systemd/system/gunicorn.service
+    - name: restart gunicorn srvice
+      systemd:
+       name: gunicorn
+       daemon_reload: yes
+       state: started
+       enabled: yes
+    - name: uninstall PyJWT
+      pip:
+       name: PyJWT==1.7.1
+       state: absent
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: install PyJWT
+      pip:
+       name: PyJWT==1.7.1
+       state: present
+       virtualenv: /home/ubuntu/new_chatapp/venv
+    - name: restart gunicorn srvice
+      systemd:
+       name: gunicorn
+       state: restarted
