@@ -67,6 +67,7 @@ Jenkins using Sonarqube :
 •	Create a sonarqube server using AWS EC2
 •	Install sonarqube on same server 
 •	https://www.vultr.com/docs/install-sonarqube-on-ubuntu-20-04-lts/
+https://www.how2shout.com/linux/install-sonarqube-on-ubuntu-20-04-18-04-server/
 •	login to sonarqube server
 •	create project inside the sonar server 
 •	copy the generated token in notepad
