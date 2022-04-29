@@ -55,3 +55,19 @@ sudo eksctl create cluster \
 	kubectl get nodes ---- > do aws configure before to that
 	aws eks list-clusters
 	kubectl get svc
+	
+	
+	if option number 8 commands will not work or if you get error like
+	------------------------------------------
+	root@ip-10-0-2-244:/home/ubuntu# kubectl get nodes
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+root@ip-10-0-2-244:/home/ubuntu# aws eks list-clusters
+{
+    "clusters": [
+        "Kubernetes-cluster"
+    ]
+}
+root@ip-10-0-2-244:/home/ubuntu# kubectl get svc
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+---------------------------------------------------------------------------------
+	solution : aws eks update-kubeconfig --region regionname --name clustername
