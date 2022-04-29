@@ -1,0 +1,2 @@
+to connect database with ec2 instance
+ mysql -h endpoint -u admin -p password
