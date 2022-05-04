@@ -1,2 +1,5 @@
 to connect database with ec2 instance
  mysql -h endpoint -u admin -p password
+ 
+ to know the zones:
+ https://howto.lintel.in/list-of-aws-regions-and-availability-zones/
